@@ -19,8 +19,13 @@ Dockerfile — билд консольного приложения
 appsettings.json — настройки подключения к БД и API
 
 Запуск проекта с нуля
-1. Клонировать репозиторий
+## Запуск проекта с нуля
+
+1. Клонировать репозиторий:
+```bash
 git clone https://github.com/HighShaggy/currency_parser.git
 cd currency_parser/CbrApp
+```
 2. Запустить в Docker
+```bash
 docker compose up --build
