@@ -24,7 +24,7 @@ appsettings.json — настройки подключения к БД и API
 1. Клонировать репозиторий:
 ```bash
 git clone https://github.com/HighShaggy/currency_parser.git
-cd currency_parser/CbrApp
+
 ```
 2. Запустить в Docker
 ```bash
