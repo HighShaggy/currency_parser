@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: cbr
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cbr"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  cbr-app:
+    build: .
+    container_name: cbr-app
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      Database__Host: postgres-db
+      Database__Port: 5432
+      Database__DatabaseName: cbr
+      Database__Username: postgres
+      Database__Password: 123
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:
