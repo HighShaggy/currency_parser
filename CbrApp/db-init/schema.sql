@@ -23,6 +23,12 @@ CREATE TABLE public.exchange_rates (
         REFERENCES public.currencies (num_code)
 );
 
+-- “аблица, в которой фиксируютс€ даты, дл€ которых уже была произведена загрузка курсов
+CREATE TABLE public.processed_dates (
+    date date PRIMARY KEY,
+    status text
+);
+
 -- »ндексы
 CREATE INDEX idx_exchange_rates_currency ON public.exchange_rates (currency_num_code);
 CREATE INDEX idx_exchange_rates_date ON public.exchange_rates (date);

@@ -11,6 +11,8 @@ namespace CbrApp.Data
 
         public DbSet<ExchangeRateEntity> ExchangeRates { get; set; }
 
+        public DbSet<ProcessedDateEntity> ProcessedDates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CurrencyEntity>(entity =>
@@ -33,6 +35,18 @@ namespace CbrApp.Data
                 entity.Property(r => r.Date).HasColumnName("date");
                 entity.Property(r => r.Nominal).HasColumnName("nominal");
                 entity.Property(r => r.Value).HasColumnName("value");
+            });
+            modelBuilder.Entity<ProcessedDateEntity>(entity =>
+            {
+                entity.ToTable("processed_dates");
+                entity.HasKey(x => x.Date);
+                entity.Property(x => x.Date)
+                      .HasColumnName("date")
+                      .HasColumnType("date");
+
+                entity.Property(x => x.Status)
+                      .HasColumnName("status")
+                      .HasConversion<string>();
             });
         }
     }

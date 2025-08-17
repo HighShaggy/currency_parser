@@ -1,18 +1,22 @@
 ﻿using CbrApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace CbrApp.Services
 {
     public static class CbrParser
     {
-        public static List<(CurrencyEntity, ExchangeRateEntity)> Parse(string response, DateTime requestDate)
+        /// <summary>
+        /// Парсит XML-ответ ЦБ РФ и возвращает дату из XML и список курсов валют.
+        /// </summary>
+        public static (DateTime xmlDate, List<(CurrencyEntity, ExchangeRateEntity)> rates) Parse(string response, DateTime requestDate)
         {
             var doc = XDocument.Parse(response);
 
             var dateStr = doc.Root?.Attribute("Date")?.Value;
-            DateTime.TryParse(dateStr, out var xmlDate);
+            DateTime.TryParse(dateStr, new CultureInfo("ru-RU"), DateTimeStyles.None, out var xmlDate);
 
             var parseResult = new List<(CurrencyEntity, ExchangeRateEntity)>();
             try
@@ -35,12 +39,13 @@ namespace CbrApp.Services
                     };
                     parseResult.Add((currency, rate));
                 }
-                return parseResult;
             }
             catch (Exception ex)
             {
-                return new List<(CurrencyEntity, ExchangeRateEntity)>();
+                parseResult = new List<(CurrencyEntity, ExchangeRateEntity)>();
+                xmlDate = DateTime.MinValue;
             }
+            return (xmlDate, parseResult);
         }
     }
 }
